@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="padporsc_drbot@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.0">
+    <root id="1"/>
+    <schema id="2" parent="1" name="padporsc_drbot">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="bot_users"/>
+    <schema id="4" parent="1" name="information_schema"/>
+    <schema id="5" parent="1" name="myrails"/>
+    <schema id="6" parent="1" name="mysql"/>
+    <schema id="7" parent="1" name="padporsc_bot4"/>
+    <schema id="8" parent="1" name="padporsc_data"/>
+    <schema id="9" parent="1" name="performance_schema"/>
+    <schema id="10" parent="1" name="phpmyadmin"/>
+    <schema id="11" parent="1" name="sys"/>
+    <table id="12" parent="2" name="dr"/>
+    <table id="13" parent="2" name="questions"/>
+    <column id="14" parent="12" name="user_id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="15" parent="12" name="level">
+      <Position>2</Position>
+      <DataType>varchar(256)|0</DataType>
+    </column>
+    <column id="16" parent="13" name="name">
+      <Position>1</Position>
+      <DataType>varchar(256)|0</DataType>
+    </column>
+    <column id="17" parent="13" name="question">
+      <Position>2</Position>
+      <DataType>longtext|0</DataType>
+    </column>
+  </database-model>
+</dataSource>
