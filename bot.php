@@ -65,15 +65,43 @@ function answered()
     global $db;
     global $user_id;
     global $text;
-    makeCurl("sendMessage", ["chat_id" => $user_id, "text" => "ممنون ازین که به این سوال پاسخ دادی.", "reply_markup" => json_encode([
-        "inline_keyboard" => [
-            [
-                ["text" => "پاسخ دوباره", "callback_data" => "Ahusdg5a456adsg"]
+    global $message_id;
+
+    if ($text == "Entdg542sd") {
+        $result=mysqli_query($db,"SELECT * FROM padporsc_drbot.dr WHERE user_id={$user_id}");
+        $row = mysqli_fetch_array($result);
+        $content = $row['content'];
+        makeCurl("editMessageText", ["message_id" => $message_id,"chat_id" => $user_id, "text" => "ممنون ازین که به این سوال پاسخ دادی.", "reply_markup" => json_encode([
+            "inline_keyboard" => [
+                [
+                    ["text" => "پاسخ دوباره", "callback_data" => "Ahusdg5a456adsg"]
+                ]
+
             ]
-        ]
-    ])]);
-    //TODO mail the answer
-    mail("content.padpors@gmail.com", "content", $text);
+        ])]);
+        //TODO mail the answer
+        mail("content.padpors@gmail.com", "content", $content);
+        makeCurl("sendMessage", ["chat_id" => 117595042, "text" => "#پاسخ کاربر:"]);
+        makeCurl("sendMessage", ["chat_id" => 117595042, "text" => $content]);
+        mysqli_query($db,"UPDATE padporsc_drbot.dr set content =  NULL WHERE user_id={$user_id}");
+    }
+    else
+    {
+        $result=mysqli_query($db,"SELECT * FROM padporsc_drbot.dr WHERE user_id={$user_id}");
+        $row = mysqli_fetch_array($result);
+        $content = $row['content'];
+        $content .= " ";
+        $content .= $text;
+        mysqli_query($db,"UPDATE padporsc_drbot.dr set content = \"{$content}\" WHERE user_id={$user_id}");
+        makeCurl("sendMessage", ["chat_id" => $user_id, "text" => "اگه پاسخت تموم شد بزن روی دکمه ی زیر وگرنه به نوشتن ادامه بده", "reply_markup" => json_encode([
+            "inline_keyboard" => [
+                [
+                    ["text" => "اتمام پاسخ", "callback_data" => "Entdg542sd"]
+                ]
+
+            ]
+        ])]);
+    }
 }
 function set()
 {
@@ -81,9 +109,12 @@ function set()
     global $text;
     global $db;
     mysqli_query($db, "UPDATE padporsc_drbot.questions SET question = \"{$text}\" WHERE name = 'alavi'");
-    makeCurl("sendMessage", ["chat_id" => $user_id, "text" => "سوال شما تغییر کرد:
+    makeCurl("sendMessage", ["chat_id" => $user_id, "text" => "#سوال شما تغییر کرد:
      {$text}"]);
-    $result = mysqli_query($db, "SELECT * FROM padporsc_drbot.dr");
+    makeCurl("sendMessage", ["chat_id" => $user_id, "text" => "این پیام را به کانالتون فوروارد کنید:"]);
+    makeCurl("sendMessage", ["chat_id" => $user_id, "text" => "{$text}
+    @drlocalbot"]);
+    /*$result = mysqli_query($db, "SELECT * FROM padporsc_drbot.dr");
     while($row = mysqli_fetch_array($result))
         makeCurl("sendMessage", ["chat_id" => $row['user_id'], "text" => "میتونی با زدن روی دکمه ی زیر سوال جدید رو ببینی و جواب بدی", "reply_markup" => json_encode([
             "inline_keyboard" => [
@@ -91,7 +122,7 @@ function set()
                     ["text" => "سوال جدید", "callback_data" => "Ahusdg5a456adsg"]
                 ]
             ]
-        ])]);
+        ])]);*/
 }
 function main()
 {
@@ -121,8 +152,7 @@ function main()
                 $user_firstname = $update->message->from->first_name;
             }
             levelFinder();
-            if ($user_id == 54654) {
-                echo "here2";
+            if ($user_id == 117595042) {
                 set();
             }
             elseif ($text == "Ahusdg5a456adsg" || $level == "Begin") {
